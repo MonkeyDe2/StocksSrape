@@ -9,12 +9,14 @@ class StockScraper:
     def get_stock_information(self, ticker):
         data = self.get_stock_info(ticker)  
         output = []
-        
+        try:
+            last_price = data.fast_info['last_price']
+
+        except Exception:
+            last_price = None
+
         output = {"Company ticker": ticker,
-                "Previous close": data.fast_info['previousClose'],
-                "Open": data.fast_info['open'],
-                "Year high": data.fast_info['yearHigh'],
-                "Year low": data.fast_info['yearLow']}
+                "Last Price": last_price}
         
         return output
         
@@ -27,11 +29,13 @@ class StockScraper:
         
     def run(self):
         tickers = self.read_text_file()
-        df = pd.DataFrame(columns=['Company ticker','Previous close','Open','Year high','Year low'])
+        df = pd.DataFrame(columns=['Company ticker','Last Price'])
         for ticker in tickers:
             data_row = self.get_stock_information(ticker)
             df = df._append(data_row, ignore_index=True)
         
         df.to_excel("output.xlsx")
+        df.to_csv('output.txt', sep='\t', index=False)
             
 StockScraper().run()
+
