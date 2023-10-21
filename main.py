@@ -1,5 +1,6 @@
 import yfinance
 import pandas as pd
+import datetime
 
 class StockScraper:
     def get_stock_info(self, ticker):
@@ -9,14 +10,17 @@ class StockScraper:
     def get_stock_information(self, ticker):
         data = self.get_stock_info(ticker)  
         output = []
+            
+        timestamp = datetime.datetime.now()
         try:
             last_price = data.fast_info['last_price']
-
+            
         except Exception:
             last_price = None
 
         output = {"Company ticker": ticker,
-                "Last Price": last_price}
+                "Last Price": last_price,
+                "Time Stamp": timestamp}
         
         return output
         
@@ -36,6 +40,6 @@ class StockScraper:
         
         df.to_excel("marketPrice.xlsx")
         df.to_csv('marketPrice.txt', sep='\t', index=False)
-            
+        
 StockScraper().run()
 
