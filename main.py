@@ -34,8 +34,8 @@ class StockScraper:
             data_row = self.get_stock_information(ticker)
             df = df._append(data_row, ignore_index=True)
         
-        df.to_excel("output.xlsx")
-        df.to_csv('output.txt', sep='\t', index=False)
+        df.to_excel("marketPrice.xlsx")
+        df.to_csv('marketPrice.txt', sep='\t', index=False)
             
 StockScraper().run()
 
