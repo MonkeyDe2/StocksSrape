@@ -22,7 +22,7 @@ class StockScraper:
         
     def read_text_file(self):
         output = []
-        with open("stocks.txt",'r') as f:
+        with open("stockslist.txt",'r') as f:
             for line in f:
                 output.append(line.upper().strip())
         return output
