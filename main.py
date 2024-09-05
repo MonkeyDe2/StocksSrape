@@ -18,10 +18,11 @@ class StockScraper:
         return price_out, time_out
         
     def read_text_file(self):
-        output = []
         with open("stockslist.txt",'r') as f:
-            for line in f:
-                output.append(line.upper().strip())
+            lines = [line.rstrip() for line in f]
+            output = [line for line in lines if line]
+        print(output)
+
         return output
         
     def run(self):
