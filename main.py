@@ -16,7 +16,7 @@ class StockScraper:
             try: 
                 price_out.append(yf_ticks.tickers[ticker].fast_info['last_price'])
                 time_out.append(datetime.datetime.now())
-                ticker_out.append(ticker_out)
+                ticker_out.append(ticker)
             except Exception as e:
                 print(datetime.datetime.now(), f'|ERROR for ticker symbol {ticker}. Ignored')
         
