@@ -14,9 +14,11 @@ class StockScraper:
         yf_ticks = yf.Tickers(ytick_format)
         for ticker in tickers:
             try: 
-                price_out.append(yf_ticks.tickers[ticker].fast_info['last_price'])
+                price_fetched = yf_ticks.tickers[ticker].fast_info['last_price']
+                price_out.append(round(price_fetched,2))
                 time_out.append(datetime.datetime.now())
                 ticker_out.append(ticker)
+                print(datetime.datetime.now(), f'|INFO {ticker} processed successfully')
             except Exception as e:
                 print(datetime.datetime.now(), f'|ERROR for ticker symbol {ticker}. Ignored')
         
@@ -24,7 +26,7 @@ class StockScraper:
         
     def read_text_file(self):
         with open("stockslist.txt",'r') as f:
-            lines = [line.rstrip() for line in f]
+            lines = [line.rstrip().upper() for line in f]
             output = [line for line in lines if line]
 
         return output
