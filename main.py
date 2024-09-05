@@ -1,28 +1,21 @@
-import yfinance
+import yfinance as yf
 import pandas as pd
 import datetime
+import time
 
 class StockScraper:
-    def get_stock_info(self, ticker):
-        output = yfinance.Ticker(ticker) 
-        return output       
-        
-    def get_stock_information(self, ticker):
-        data = self.get_stock_info(ticker)  
-        output = []
-            
-        timestamp = datetime.datetime.now()
-        try:
-            last_price = data.fast_info['last_price']
-            
-        except Exception:
-            last_price = None
+    def get_stocks_information(self, tickers):
+        price_out = []
+        time_out = []
 
-        output = {"Company ticker": ticker,
-                "Last Price": last_price,
-                "Time Stamp": timestamp}
+        ytick_format = ' '.join(tickers)
+
+        yf_ticks = yf.Tickers(ytick_format)
+        for ticker in tickers:
+            price_out.append(yf_ticks.tickers[ticker].fast_info['last_price'])
+            time_out.append(datetime.datetime.now())
         
-        return output
+        return price_out, time_out
         
     def read_text_file(self):
         output = []
@@ -32,14 +25,19 @@ class StockScraper:
         return output
         
     def run(self):
+        start_time = time.time()
+        print(datetime.datetime.now(), '|Reading ticker info...')
         tickers = self.read_text_file()
-        df = pd.DataFrame(columns=['Company ticker','Last Price'])
-        for ticker in tickers:
-            data_row = self.get_stock_information(ticker)
-            df = df._append(data_row, ignore_index=True)
+        print(datetime.datetime.now(), '|Fetching data...')
+        prices, timestamp = self.get_stocks_information(tickers)
+        df = pd.DataFrame(data={'ticker':tickers, 'prices':prices, 'time':timestamp})
+
         
+        print(datetime.datetime.now(), '|Saving data...')
         df.to_excel("marketPrice.xlsx")
         df.to_csv('marketPrice.txt', sep='\t', index=False)
+        duration = time.time() - start_time
+        print(datetime.datetime.now(), f'|Completed in {duration} seconds')
         
 StockScraper().run()
 
